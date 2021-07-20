@@ -1,10 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require("body-parser");
+const bcrypt=require('bcrypt');
 require('dotenv').config();
+const saltRounds=10;
 
 require('./models/Blog');
-//const User = require('mongoose').model("User");
+require('./models/User');
+const User = require('mongoose').model('User');
 const Blog = require('mongoose').model('Blog');
 
 
@@ -29,10 +32,51 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.post('/login',(req,res)=>{
 
+    User.findOne({"mail": req.body.mail},async(err,user)=>
+    {
+        console.log(user);
+        if(!user)
+        {
+            res.send("failure");
+        }else{
 
+
+
+           await bcrypt.compare(req.body.password, user.password, function (err, result)
+           {
+
+            if(result==true)
+            {
+                res.send("success");
+            }else{
+                res.send("password incorrect");
+            }            
+           });
+        }
+
+    });
+});   
+
+app.post('/register',async(req,res)=>{
+const username=req.body.username;
+const batch=req.body.batch;
+const dept=req.body.dept;
+const mail=req.body.mail;
+const password=req.body.password;
+
+
+await bcrypt.hash(password, saltRounds).then(function(hash) {
+    const us=new User(
+        {username:username, batch:batch, dept:dept, mail:mail,password:hash});
+        us.save(function(err){
+            if (!err){
+                console.log("hel")
+                res.send({success:true});
+            }
+          });
+    
 });
 
-app.post('/register',(req,res)=>{
 
 
 });
