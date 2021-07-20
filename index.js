@@ -48,7 +48,7 @@ app.post('/login',(req,res)=>{
 
             if(result==true)
             {
-                res.send("success");
+                res.send({success:true});
             }else{
                 res.send("password incorrect");
             }            
@@ -100,9 +100,22 @@ app.post('/blog',(req,res)=>{
       });
 });
 
-app.get('/blogd/:cat',(req,res)=>{
+/*app.get('/blogd/:cat',(req,res)=>{
     const categ=req.params.cat;
     Blog.find({categ:categ},(err,posts)=>{
+
+        if(!err)
+          res.send(posts);
+        else
+          console.log(err);  
+    });
+
+
+});*/
+
+app.get('/blogd',(req,res)=>{
+    
+    Blog.find({},(err,posts)=>{
 
         if(!err)
           res.send(posts);
