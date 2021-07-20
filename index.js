@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require("body-parser");
+const cors=require('cors');
 const bcrypt=require('bcrypt');
 require('dotenv').config();
 const saltRounds=10;
@@ -21,7 +22,7 @@ mongoose.connect(process.env.mongoURI, {
 .catch(err => console.log("DATABASE: " + err));
 
 const app = express();
-
+app.use(cors);
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
